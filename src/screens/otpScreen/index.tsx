@@ -126,8 +126,8 @@ export const OTPScreen: React.FC = () => {
       } else {
         success = await verifyEmailOTP(value, otpString);
         if (success) {
-          // Navigate to home screen (placeholder)
-          navigation.replace('Login');
+          // Navigate to vehicle selection screen
+          navigation.replace('VehicleSelection');
         }
       }
     } catch (error) {

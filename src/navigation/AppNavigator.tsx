@@ -6,12 +6,14 @@ import { OnboardingScreen } from '@/screens/onboardingScreen';
 import { LoginScreen } from '@/screens/loginScreen';
 import { OTPScreen } from '@/screens/otpScreen';
 import { CompleteProfileScreen } from '@/screens/completeProfileScreen';
+import { VehicleSelectionScreen } from '@/screens/vehicleSelectionScreen';
 
 export type RootStackParamList = {
   Onboarding: undefined;
   Login: undefined;
   OTP: { type: 'phone' | 'email'; value: string };
   CompleteProfile: undefined;
+  VehicleSelection: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -61,6 +63,10 @@ export const AppNavigator: React.FC = () => {
         <Stack.Screen
           name="CompleteProfile"
           component={CompleteProfileScreen}
+        />
+        <Stack.Screen
+          name="VehicleSelection"
+          component={VehicleSelectionScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
