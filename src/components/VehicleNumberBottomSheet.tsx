@@ -1,12 +1,17 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  Animated,
+  Easing,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
 } from 'react-native';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useTheme } from '@/theme/useTheme';
 import { Vehicle } from '@/data/mockVehicles';
 
@@ -21,141 +26,202 @@ export const VehicleNumberBottomSheet: React.FC<
   VehicleNumberBottomSheetProps
 > = ({ vehicle, isOpen, onClose, onSubmit }) => {
   const theme = useTheme();
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const [vehicleNumber, setVehicleNumber] = React.useState('');
+  const [visible, setVisible] = React.useState(false);
+  const [activeVehicle, setActiveVehicle] = React.useState<Vehicle | null>(
+    null,
+  );
+  const animation = useRef(new Animated.Value(0)).current;
 
-  const snapPoints = useMemo(() => ['50%'], []);
+  const animateTo = useCallback(
+    (toValue: 0 | 1, callback?: () => void) => {
+      Animated.timing(animation, {
+        toValue,
+        duration: toValue === 1 ? 300 : 250,
+        easing:
+          toValue === 1 ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }).start(() => callback?.());
+    },
+    [animation],
+  );
+
+  const closeSheet = useCallback(
+    (shouldNotifyParent = true) => {
+      animateTo(0, () => {
+        setVisible(false);
+        setVehicleNumber('');
+        setActiveVehicle(null);
+        if (shouldNotifyParent) {
+          onClose();
+        }
+      });
+    },
+    [animateTo, onClose],
+  );
+
+  const openSheet = useCallback(() => {
+    setVisible(true);
+    requestAnimationFrame(() => animateTo(1));
+  }, [animateTo]);
 
   React.useEffect(() => {
-    if (isOpen) {
-      bottomSheetRef.current?.expand();
-    } else {
-      bottomSheetRef.current?.close();
+    if (isOpen && vehicle) {
+      setActiveVehicle(vehicle);
+      openSheet();
+    } else if (!isOpen && visible) {
+      closeSheet(false);
     }
-  }, [isOpen]);
-
-  const handleSheetChanges = useCallback(
-    (index: number) => {
-      if (index === -1) {
-        onClose();
-        setVehicleNumber('');
-      }
-    },
-    [onClose],
-  );
+  }, [closeSheet, isOpen, openSheet, vehicle, visible]);
 
   const handleSubmit = () => {
-    if (vehicleNumber.trim()) {
-      onSubmit(vehicleNumber.trim());
-      setVehicleNumber('');
-      bottomSheetRef.current?.close();
+    if (!vehicleNumber.trim() || !activeVehicle) {
+      return;
     }
+    onSubmit(vehicleNumber.trim());
+    closeSheet(true);
   };
 
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        opacity={0.5}
-      />
-    ),
-    [],
-  );
+  const handleBackdropPress = () => {
+    closeSheet(true);
+  };
 
-  if (!vehicle) {
+  const translateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [600, 0], // Fixed height for smooth animation
+  });
+
+  const backdropOpacity = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.5],
+  });
+
+  if (!visible && !isOpen) {
     return null;
   }
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      enablePanDownToClose
-      backdropComponent={renderBackdrop}
-      backgroundStyle={{
-        backgroundColor: theme.colors.backgrounds.card,
-      }}
-      handleIndicatorStyle={{
-        backgroundColor: theme.colors.borders.medium,
-      }}
+    <Modal
+      visible={visible}
+      transparent
+      animationType="none"
+      onRequestClose={handleBackdropPress}
     >
-      <View style={styles.container}>
-        <Text style={[styles.title, { color: theme.colors.text.primary }]}>
-          Enter your Vehicle Number
-        </Text>
-
-        <View
-          style={[
-            styles.inputContainer,
-            {
-              backgroundColor: theme.colors.backgrounds.secondary,
-              borderColor: theme.colors.borders.light,
-            },
-          ]}
+      <KeyboardAvoidingView
+        style={styles.modalWrapper}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={handleBackdropPress}
         >
-          <TextInput
-            style={[styles.input, { color: theme.colors.text.primary }]}
-            placeholder="Vehicle Number"
-            placeholderTextColor={theme.colors.text.tertiary}
-            value={vehicleNumber}
-            onChangeText={setVehicleNumber}
-            autoCapitalize="characters"
-            autoCorrect={false}
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.backdrop, { opacity: backdropOpacity }]}
           />
-        </View>
+        </Pressable>
 
-        <Text
-          style={[styles.instruction, { color: theme.colors.text.secondary }]}
-        >
-          Enter your {vehicle.name} registration number.
-        </Text>
-
-        <TouchableOpacity
+        <Animated.View
           style={[
-            styles.submitButton,
+            styles.sheet,
             {
-              backgroundColor:
-                vehicleNumber.trim().length > 0
-                  ? theme.colors.buttons.primary.background
-                  : theme.colors.borders.light,
+              backgroundColor: theme.colors.backgrounds.card,
+              transform: [{ translateY }],
             },
           ]}
-          onPress={handleSubmit}
-          disabled={vehicleNumber.trim().length === 0}
         >
-          <Text
-            style={[
-              styles.submitButtonText,
-              {
-                color:
-                  vehicleNumber.trim().length > 0
-                    ? theme.colors.buttons.primary.text
-                    : theme.colors.text.tertiary,
-              },
-            ]}
-          >
-            Submit
-          </Text>
-        </TouchableOpacity>
+          <View style={styles.container}>
+            <Text style={[styles.title, { color: theme.colors.text.primary }]}>
+              Enter your Vehicle Number
+            </Text>
 
-        <Text
-          style={[styles.footerText, { color: theme.colors.text.tertiary }]}
-        >
-          Just once! Register your vehicle now, and we'll remember it for you.
-        </Text>
-      </View>
-    </BottomSheet>
+            <View
+              style={[
+                styles.inputContainer,
+                {
+                  backgroundColor: theme.colors.backgrounds.secondary,
+                  borderColor: theme.colors.borders.light,
+                },
+              ]}
+            >
+              <TextInput
+                style={[styles.input, { color: theme.colors.text.primary }]}
+                placeholder="Vehicle Number"
+                placeholderTextColor={theme.colors.text.tertiary}
+                value={vehicleNumber}
+                onChangeText={setVehicleNumber}
+                autoCapitalize="characters"
+                autoCorrect={false}
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.instruction,
+                { color: theme.colors.text.secondary },
+              ]}
+            >
+              Enter your {activeVehicle?.name ?? 'vehicle'} registration number.
+            </Text>
+
+            <TouchableOpacity
+              style={[
+                styles.submitButton,
+                {
+                  backgroundColor:
+                    vehicleNumber.trim().length > 0
+                      ? theme.colors.buttons.primary.background
+                      : theme.colors.borders.light,
+                },
+              ]}
+              onPress={handleSubmit}
+              disabled={vehicleNumber.trim().length === 0}
+            >
+              <Text
+                style={[
+                  styles.submitButtonText,
+                  {
+                    color:
+                      vehicleNumber.trim().length > 0
+                        ? theme.colors.buttons.primary.text
+                        : theme.colors.text.tertiary,
+                  },
+                ]}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+
+            <Text
+              style={[styles.footerText, { color: theme.colors.text.tertiary }]}
+            >
+              Just once! Register your vehicle now, and we'll remember it for
+              you.
+            </Text>
+          </View>
+        </Animated.View>
+      </KeyboardAvoidingView>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalWrapper: {
     flex: 1,
+    justifyContent: 'flex-end',
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#000',
+  },
+  sheet: {
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    overflow: 'hidden',
+  },
+  container: {
     padding: 24,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 24,

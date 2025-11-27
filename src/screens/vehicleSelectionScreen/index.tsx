@@ -3,14 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   ScrollView,
   FlatList,
   Image,
   SafeAreaView,
+  Pressable,
 } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Search } from 'lucide-react-native';
+import { Search, CheckCircle2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/useTheme';
 import { mockVehicles, BRANDS, Vehicle } from '@/data/mockVehicles';
 import { VehicleNumberBottomSheet } from '@/components/VehicleNumberBottomSheet';
@@ -46,12 +45,17 @@ export const VehicleSelectionScreen: React.FC = () => {
   }, [selectedBrand, searchQuery]);
 
   const handleVehicleSelect = (vehicle: Vehicle) => {
-    setSelectedVehicle(vehicle);
-    setIsBottomSheetOpen(true);
+    // Toggle selection: tap again to unselect
+    if (selectedVehicle?.id === vehicle.id) {
+      setSelectedVehicle(null);
+    } else {
+      setSelectedVehicle(vehicle);
+    }
   };
 
   const handleAddVehicle = () => {
     if (selectedVehicle) {
+      console.log('Opening bottom sheet for vehicle:', selectedVehicle.name);
       setIsBottomSheetOpen(true);
     }
   };
@@ -75,17 +79,22 @@ export const VehicleSelectionScreen: React.FC = () => {
   const renderBrandTab = (brand: string) => {
     const isActive = selectedBrand === brand;
     return (
-      <TouchableOpacity
+      <Pressable
         key={brand}
-        style={[
+        style={({ pressed }) => [
           styles.brandTab,
-          isActive && [
-            styles.brandTabActive,
-            { borderBottomColor: theme.colors.buttons.primary.background },
-          ],
+          {
+            backgroundColor: isActive
+              ? theme.colors.buttons.primary.background
+              : theme.colors.backgrounds.card,
+            borderColor: isActive
+              ? theme.colors.buttons.primary.background
+              : theme.colors.borders.light,
+            transform: [{ scale: pressed ? 0.96 : 1 }],
+            opacity: pressed ? 0.9 : 1,
+          },
         ]}
         onPress={() => {
-          // Reset list scroll position when changing brand so layout stays consistent
           flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
           setSelectedBrand(brand);
         }}
@@ -95,160 +104,228 @@ export const VehicleSelectionScreen: React.FC = () => {
             styles.brandTabText,
             {
               color: isActive
-                ? theme.colors.text.primary
-                : theme.colors.text.tertiary,
-              fontWeight: isActive ? '600' : '400',
+                ? theme.colors.buttons.primary.text
+                : theme.colors.text.primary,
             },
           ]}
-          numberOfLines={1}
-          ellipsizeMode="tail"
         >
           {brand}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
   const renderVehicleCard = ({ item }: { item: Vehicle }) => {
     const isSelected = selectedVehicle?.id === item.id;
     return (
-      <TouchableOpacity
-        style={[
+      <Pressable
+        style={({ pressed }) => [
           styles.vehicleCard,
-          { backgroundColor: theme.colors.backgrounds.card },
-          isSelected && [
-            styles.vehicleCardSelected,
-            { borderColor: theme.colors.buttons.primary.background },
-          ],
+          {
+            backgroundColor: theme.colors.backgrounds.card,
+            borderColor: isSelected
+              ? theme.colors.buttons.primary.background
+              : theme.colors.borders.light,
+          },
+          isSelected && styles.vehicleCardSelected,
+          {
+            transform: [{ scale: pressed ? 0.97 : 1 }],
+          },
         ]}
         onPress={() => handleVehicleSelect(item)}
       >
-        <Image
-          source={{ uri: item.imageUrl }}
-          style={styles.vehicleImage}
-          resizeMode="cover"
-          onError={() => {
-            // Image failed to load - placeholder will show background color
-            console.warn(`Failed to load image for ${item.name}`);
-          }}
-        />
-        <Text
-          style={[styles.vehicleName, { color: theme.colors.text.primary }]}
-        >
-          {item.name}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.backgrounds.primary },
-        ]}
-      >
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.text.primary }]}>
-            Select your vehicle
-          </Text>
-        </View>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.brandTabsContainer}
-          contentContainerStyle={styles.brandTabsScroll}
-        >
-          {BRANDS.map(brand => renderBrandTab(brand))}
-        </ScrollView>
-
-        <View style={styles.searchContainer}>
-          <View
-            style={[
-              styles.searchInputContainer,
-              {
-                backgroundColor: theme.colors.backgrounds.card,
-                borderColor: theme.colors.borders.light,
-                borderWidth: 1,
-              },
-            ]}
-          >
-            <Search size={20} color={theme.colors.text.tertiary} />
-            <TextInput
-              style={[styles.searchInput, { color: theme.colors.text.primary }]}
-              placeholder="Search for vehicle"
-              placeholderTextColor={theme.colors.text.tertiary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          </View>
-        </View>
-
-        <FlatList
-          key={selectedBrand}
-          ref={flatListRef}
-          data={filteredVehicles}
-          renderItem={renderVehicleCard}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          contentContainerStyle={styles.vehicleGrid}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <View style={{ padding: 40, alignItems: 'center' }}>
-              <Text style={{ color: theme.colors.text.tertiary, fontSize: 16 }}>
-                No vehicles found
-              </Text>
-            </View>
-          }
-        />
-
-        <View
-          style={[
-            styles.addVehicleButton,
-            {
-              backgroundColor: theme.colors.backgrounds.primary,
-              borderTopColor: theme.colors.borders.light,
-            },
-          ]}
-        >
-          <TouchableOpacity
-            style={[
-              styles.addVehicleButtonContent,
-              {
-                backgroundColor: selectedVehicle
-                  ? theme.colors.buttons.primary.background
-                  : theme.colors.borders.light,
-              },
-              !selectedVehicle && styles.addVehicleButtonDisabled,
-            ]}
-            onPress={handleAddVehicle}
-            disabled={!selectedVehicle}
-          >
-            <Text
+        <View style={styles.vehicleImageContainer}>
+          <Image
+            source={{ uri: item.imageUrl }}
+            style={styles.vehicleImage}
+            resizeMode="contain"
+            onError={() => {
+              console.warn(`Failed to load image for ${item.name}`);
+            }}
+          />
+          {isSelected && (
+            <View
               style={[
-                styles.addVehicleButtonText,
+                styles.selectedBadge,
                 {
-                  color: selectedVehicle
-                    ? theme.colors.buttons.primary.text
-                    : theme.colors.text.tertiary,
+                  backgroundColor: theme.colors.buttons.primary.background,
                 },
               ]}
             >
-              Add Vehicle
-            </Text>
-          </TouchableOpacity>
+              <CheckCircle2
+                size={20}
+                color="#FFFFFF"
+                fill={theme.colors.buttons.primary.background}
+                strokeWidth={3}
+              />
+            </View>
+          )}
         </View>
+        <View style={styles.vehicleNameContainer}>
+          <Text
+            style={[
+              styles.vehicleName,
+              isSelected && styles.vehicleNameSelected,
+              {
+                color: isSelected
+                  ? theme.colors.buttons.primary.background
+                  : theme.colors.text.primary,
+              },
+            ]}
+            numberOfLines={2}
+          >
+            {item.name}
+          </Text>
+        </View>
+      </Pressable>
+    );
+  };
 
-        <VehicleNumberBottomSheet
-          vehicle={selectedVehicle}
-          isOpen={isBottomSheetOpen}
-          onClose={handleBottomSheetClose}
-          onSubmit={handleVehicleSubmit}
-        />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+  const handleSkip = () => {
+    console.log('Skip vehicle selection');
+    // TODO: Navigate to next screen
+  };
+
+  return (
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.backgrounds.primary },
+      ]}
+    >
+      <View style={styles.headerContainer}>
+        <Pressable onPress={handleSkip} style={styles.skipButton}>
+          <Text
+            style={[styles.skipText, { color: theme.colors.text.secondary }]}
+          >
+            Skip
+          </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: theme.colors.text.primary }]}>
+          Select your vehicle
+        </Text>
+        <Text
+          style={[styles.subtitle, { color: theme.colors.text.secondary }]}
+          numberOfLines={2}
+        >
+          Choose from our wide range of electric vehicles
+        </Text>
+      </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.brandTabsContainer}
+        contentContainerStyle={styles.brandTabsScroll}
+      >
+        {BRANDS.map(brand => renderBrandTab(brand))}
+      </ScrollView>
+
+      <View style={styles.searchContainer}>
+        <View
+          style={[
+            styles.searchInputContainer,
+            {
+              backgroundColor: theme.colors.backgrounds.card,
+              borderColor: theme.colors.borders.light,
+            },
+          ]}
+        >
+          <Search size={20} color={theme.colors.text.tertiary} />
+          <TextInput
+            style={[styles.searchInput, { color: theme.colors.text.primary }]}
+            placeholder="Search for vehicle"
+            placeholderTextColor={theme.colors.text.tertiary}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+      </View>
+
+      <FlatList
+        key={selectedBrand}
+        ref={flatListRef}
+        data={filteredVehicles}
+        renderItem={renderVehicleCard}
+        keyExtractor={item => item.id}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
+        contentContainerStyle={styles.vehicleGrid}
+        showsVerticalScrollIndicator={false}
+        style={filteredVehicles.length === 0 ? styles.flatListEmpty : undefined}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Search
+              size={48}
+              color={theme.colors.text.tertiary}
+              strokeWidth={1.5}
+            />
+            <Text
+              style={[styles.emptyText, { color: theme.colors.text.tertiary }]}
+            >
+              No vehicles found
+            </Text>
+            <Text
+              style={[
+                styles.emptyText,
+                styles.emptySubText,
+                { color: theme.colors.text.tertiary },
+              ]}
+            >
+              Try adjusting your search
+            </Text>
+          </View>
+        }
+      />
+
+      <View
+        style={[
+          styles.addVehicleButton,
+          {
+            backgroundColor: theme.colors.backgrounds.primary,
+          },
+        ]}
+      >
+        <Pressable
+          style={({ pressed }) => [
+            styles.addVehicleButtonContent,
+            {
+              backgroundColor: selectedVehicle
+                ? theme.colors.buttons.primary.background
+                : theme.colors.borders.light,
+              transform: [{ scale: pressed && selectedVehicle ? 0.98 : 1 }],
+              opacity: pressed && selectedVehicle ? 0.9 : 1,
+            },
+            !selectedVehicle && styles.addVehicleButtonDisabled,
+          ]}
+          onPress={handleAddVehicle}
+          disabled={!selectedVehicle}
+        >
+          <Text
+            style={[
+              styles.addVehicleButtonText,
+              {
+                color: selectedVehicle
+                  ? theme.colors.buttons.primary.text
+                  : theme.colors.text.tertiary,
+              },
+            ]}
+          >
+            {selectedVehicle
+              ? 'Continue with Selected Vehicle'
+              : 'Select a Vehicle'}
+          </Text>
+        </Pressable>
+      </View>
+      <VehicleNumberBottomSheet
+        vehicle={selectedVehicle}
+        isOpen={isBottomSheetOpen}
+        onClose={handleBottomSheetClose}
+        onSubmit={handleVehicleSubmit}
+      />
+    </SafeAreaView>
   );
 };
