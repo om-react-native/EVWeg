@@ -7,6 +7,7 @@ import { LoginScreen } from '@/screens/loginScreen';
 import { OTPScreen } from '@/screens/otpScreen';
 import { CompleteProfileScreen } from '@/screens/completeProfileScreen';
 import { VehicleSelectionScreen } from '@/screens/vehicleSelectionScreen';
+import { BottomTabNavigator } from './BottomTabNavigator';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -14,6 +15,7 @@ export type RootStackParamList = {
   OTP: { type: 'phone' | 'email'; value: string };
   CompleteProfile: undefined;
   VehicleSelection: undefined;
+  MainTabs: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -68,6 +70,7 @@ export const AppNavigator: React.FC = () => {
           name="VehicleSelection"
           component={VehicleSelectionScreen}
         />
+        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

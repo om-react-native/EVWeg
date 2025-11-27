@@ -20,11 +20,12 @@ interface VehicleNumberBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (vehicleNumber: string) => void;
+  onSkip: () => void;
 }
 
 export const VehicleNumberBottomSheet: React.FC<
   VehicleNumberBottomSheetProps
-> = ({ vehicle, isOpen, onClose, onSubmit }) => {
+> = ({ vehicle, isOpen, onClose, onSubmit, onSkip }) => {
   const theme = useTheme();
   const [vehicleNumber, setVehicleNumber] = React.useState('');
   const [visible, setVisible] = React.useState(false);
@@ -111,6 +112,11 @@ export const VehicleNumberBottomSheet: React.FC<
         style={styles.modalWrapper}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
+        <Pressable onPress={onSkip} style={styles.skipButton}>
+          <Text style={[styles.skipText, { color: theme.colors.text.primary }]}>
+            Skip
+          </Text>
+        </Pressable>
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={handleBackdropPress}
@@ -258,5 +264,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     lineHeight: 18,
+  },
+  skipButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flex: 1,
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    marginTop: 60,
+    zIndex: 1,
+  },
+  skipText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

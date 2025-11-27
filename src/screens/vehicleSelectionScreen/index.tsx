@@ -9,14 +9,23 @@ import {
   SafeAreaView,
   Pressable,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import { Search, CheckCircle2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/useTheme';
 import { mockVehicles, BRANDS, Vehicle } from '@/data/mockVehicles';
 import { VehicleNumberBottomSheet } from '@/components/VehicleNumberBottomSheet';
+import type { RootStackParamList } from '@/navigation/AppNavigator';
 import { styles } from './styles';
+
+type VehicleSelectionScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'VehicleSelection'
+>;
 
 export const VehicleSelectionScreen: React.FC = () => {
   const theme = useTheme();
+  const navigation = useNavigation<VehicleSelectionScreenNavigationProp>();
   const [selectedBrand, setSelectedBrand] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -72,8 +81,9 @@ export const VehicleSelectionScreen: React.FC = () => {
     });
     // TODO: Implement API call to register vehicle
     handleBottomSheetClose();
-    setSelectedVehicle(null); // Clear selection after successful submission
-    // TODO: Navigate to next screen after successful registration
+    setSelectedVehicle(null);
+    // Navigate to main app tabs
+    navigation.replace('MainTabs');
   };
 
   const renderBrandTab = (brand: string) => {
@@ -182,8 +192,10 @@ export const VehicleSelectionScreen: React.FC = () => {
   };
 
   const handleSkip = () => {
-    console.log('Skip vehicle selection');
-    // TODO: Navigate to next screen
+    handleBottomSheetClose();
+    setSelectedVehicle(null);
+    // Navigate to main app tabs
+    navigation.replace('MainTabs');
   };
 
   return (
@@ -193,16 +205,6 @@ export const VehicleSelectionScreen: React.FC = () => {
         { backgroundColor: theme.colors.backgrounds.primary },
       ]}
     >
-      <View style={styles.headerContainer}>
-        <Pressable onPress={handleSkip} style={styles.skipButton}>
-          <Text
-            style={[styles.skipText, { color: theme.colors.text.secondary }]}
-          >
-            Skip
-          </Text>
-        </Pressable>
-      </View>
-
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.text.primary }]}>
           Select your vehicle
@@ -325,6 +327,7 @@ export const VehicleSelectionScreen: React.FC = () => {
         isOpen={isBottomSheetOpen}
         onClose={handleBottomSheetClose}
         onSubmit={handleVehicleSubmit}
+        onSkip={handleSkip}
       />
     </SafeAreaView>
   );
