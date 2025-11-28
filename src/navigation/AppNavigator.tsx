@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNBootSplash from 'react-native-bootsplash';
 import { OnboardingScreen } from '@/screens/onboardingScreen';
 import { LoginScreen } from '@/screens/loginScreen';
 import { OTPScreen } from '@/screens/otpScreen';
@@ -44,6 +45,15 @@ export const AppNavigator: React.FC = () => {
 
     init();
   }, []);
+
+  // Hide native splash screen once we know which route to show
+  useEffect(() => {
+    if (initialRoute) {
+      RNBootSplash.hide({ fade: true }).catch(error => {
+        console.warn('Failed to hide bootsplash', error);
+      });
+    }
+  }, [initialRoute]);
 
   if (!initialRoute) {
     // Simple placeholder while we determine initial route

@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		20AB86D9A2524F32A30CF0DE /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A59E00D5EB4154B8E02570 /* BootSplash.storyboard */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B7C3827448EE47569C522CFB /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6761B909F42A467CB2F1A47D /* Colors.xcassets */; };
 		D5072FAF3DD54A20E400E8A6 /* libPods-evwegapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9645F3921BF9667E0876A149 /* libPods-evwegapp.a */; };
 		FFD957CC4546E8DF9415D718 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -20,6 +22,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = evwegapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = evwegapp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4440ADDBA4CFCE61F35FE5EB /* Pods-evwegapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-evwegapp.release.xcconfig"; path = "Target Support Files/Pods-evwegapp/Pods-evwegapp.release.xcconfig"; sourceTree = "<group>"; };
+		57A59E00D5EB4154B8E02570 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = evwegapp/BootSplash.storyboard; sourceTree = "<group>"; };
+		6761B909F42A467CB2F1A47D /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = evwegapp/Colors.xcassets; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = evwegapp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = evwegapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9645F3921BF9667E0876A149 /* libPods-evwegapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-evwegapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +51,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				57A59E00D5EB4154B8E02570 /* BootSplash.storyboard */,
+				6761B909F42A467CB2F1A47D /* Colors.xcassets */,
 			);
 			name = evwegapp;
 			sourceTree = "<group>";
@@ -161,6 +167,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				FFD957CC4546E8DF9415D718 /* PrivacyInfo.xcprivacy in Resources */,
+				20AB86D9A2524F32A30CF0DE /* BootSplash.storyboard in Resources */,
+				B7C3827448EE47569C522CFB /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
