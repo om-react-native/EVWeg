@@ -86,7 +86,7 @@ You've successfully run and modified your React Native App. :partying_face:
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
-# Learn More
+## Learn More
 
 To learn more about React Native, take a look at the following resources:
 
@@ -95,3 +95,54 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+## UI & Styling Guidelines
+
+- **Imports & aliases**
+  - Use `@` alias instead of relative `../` imports:
+    - Theme: `@/theme/metrics`, `@/theme/font`, `@/theme/useTheme`, `@/theme/ThemeContext`
+    - Screens: `@/screens/...`
+    - Components: `@/components/...`
+    - Types: `@/types/...`
+
+- **Scaling helpers (for all numeric sizes)**
+  - Import from `@/theme/metrics`:
+    - `scale(value)`: horizontal spacing/sizes (left/right padding & margin, `paddingHorizontal`, widths, gaps).
+    - `verticalScale(value)`: vertical spacing/sizes (top/bottom padding & margin, `paddingVertical`, heights).
+    - `moderateScale(value)`: radii, icon containers, dots, chips, small squares.
+  - Avoid raw numbers like `padding: 24` or `height: 56` – always wrap with a scaling helper.
+  - Keep `flex` and percentage values as-is (`flex: 1`, `width: '100%'`).
+
+- **Fonts & accessibility**
+  - Use `scaledFontSize` from `@/theme/font` for **all** `fontSize` values:
+    - `scaledFontSize(baseSize, maxScale = 1.3)` combines device-size scaling and system font scale, capped to avoid breaking layouts.
+  - Derive `lineHeight` from the scaled font: `lineHeight: scaledFontSize(14) * 1.4`.
+  - Global defaults (in `App.tsx`) ensure `Text` and `TextInput` respect system font size via `allowFontScaling = true`.
+
+- **Theme usage**
+  - Always use theme tokens instead of hard-coded colors:
+    - Text: `theme.colors.text.primary`, `theme.colors.text.secondary`, etc.
+    - Backgrounds: `theme.colors.backgrounds.primary`, `backgrounds.card`, etc.
+    - Borders: `theme.colors.borders.light/medium/dark`.
+    - Buttons: `theme.colors.buttons.primary/secondary/...`.
+  - Use `theme.typography.fontSize` and `theme.spacing` as **base design tokens**, then wrap with scaling helpers:
+    - `fontSize: scaledFontSize(theme.typography.fontSize.lg)`
+    - `padding: scale(theme.spacing.md)`
+
+- **Screen & component structure**
+  - Screens live under `src/screens/ScreenName/` with:
+    - `index.tsx` for logic/layout.
+    - `styles.ts` for `StyleSheet` definitions.
+  - Prefer theme-aware styles:
+    - `export const createStyles = (theme: Theme) => StyleSheet.create({ ... })`
+  - Components define a local `StyleSheet.create` in the same file and use theme + scaling helpers.
+
+- **Common patterns**
+  - Buttons:
+    - Height around `verticalScale(56)`, radius `moderateScale(12–16)`.
+    - Use theme button colors and `scaledFontSize(16)` for labels.
+  - Cards & chips:
+    - Card radius `moderateScale(12–18)`, chip radius `moderateScale(12–20)`.
+    - Horizontal padding with `scale`, vertical with `verticalScale`.
+
+Follow these conventions for any new screens/components so the UI stays consistent and responsive across all devices and system font sizes.

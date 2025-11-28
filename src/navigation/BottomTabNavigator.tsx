@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Map, Wallet, MessageCircle, Route } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/useTheme';
 import { MapScreen } from '@/screens/mapScreen';
 import { WalletScreen } from '@/screens/walletScreen';
@@ -13,11 +14,13 @@ export type BottomTabParamList = {
   Buzz: undefined;
   Trips: undefined;
 };
-
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export const BottomTabNavigator: React.FC = () => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const bottomPadding = Math.max(insets.bottom, 10);
 
   return (
     <Tab.Navigator
@@ -29,9 +32,10 @@ export const BottomTabNavigator: React.FC = () => {
           backgroundColor: theme.colors.backgrounds.card,
           borderTopColor: theme.colors.borders.light,
           borderTopWidth: 1,
-          paddingBottom: 8,
+          paddingBottom: bottomPadding,
           paddingTop: 8,
-          height: 65,
+          // Let the tab bar grow with safe area instead of hard-coding height
+          // This keeps it above the gesture bar / navigation buttons on iOS & Android
         },
         tabBarLabelStyle: {
           fontSize: 12,

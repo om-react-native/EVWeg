@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { scale, verticalScale, moderateScale } from '@/theme/metrics';
+import { scaledFontSize } from '@/theme/font';
 
 export const styles = StyleSheet.create({
   container: {
@@ -6,27 +8,27 @@ export const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 40,
+    paddingHorizontal: scale(24),
+    paddingTop: verticalScale(60),
+    paddingBottom: verticalScale(40),
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 48,
-    marginTop: 20,
+    marginBottom: verticalScale(48),
+    marginTop: verticalScale(20),
   },
   contentContainer: {
     flex: 1,
   },
   descriptionContainer: {
-    marginBottom: 32,
-    paddingHorizontal: 20,
+    marginBottom: verticalScale(32),
+    paddingHorizontal: scale(20),
   },
   description: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '400',
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: scaledFontSize(16) * 1.5,
   },
   descriptionBold: {
     fontWeight: '700',
@@ -35,90 +37,90 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   inputGroup: {
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
   label: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 56,
+    height: verticalScale(56),
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: moderateScale(12),
+    paddingHorizontal: scale(16),
   },
   countryCodeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 8,
-    paddingRight: 8,
+    marginRight: scale(8),
+    paddingRight: scale(8),
     borderRightWidth: 1,
     borderRightColor: 'rgba(0,0,0,0.1)',
   },
   flagEmoji: {
-    marginRight: 4,
+    marginRight: scale(4),
   },
   countryCode: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
   },
   inputIcon: {
-    marginRight: 12,
+    marginRight: scale(12),
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '400',
   },
   errorText: {
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
+    fontSize: scaledFontSize(12),
+    marginTop: verticalScale(4),
+    marginLeft: scale(4),
   },
   submitButton: {
-    height: 56,
-    borderRadius: 12,
+    height: verticalScale(56),
+    borderRadius: moderateScale(12),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
   submitButtonText: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
   },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 24,
+    marginVertical: verticalScale(24),
   },
   dividerLine: {
     flex: 1,
-    height: 1,
+    height: verticalScale(1),
   },
   dividerText: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '500',
-    marginHorizontal: 16,
+    marginHorizontal: scale(16),
   },
   socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 56,
-    borderRadius: 12,
+    height: verticalScale(56),
+    borderRadius: moderateScale(12),
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: verticalScale(12),
   },
   socialIconImage: {
-    width: 20,
-    height: 20,
-    marginRight: 12,
+    width: scale(20),
+    height: verticalScale(20),
+    marginRight: scale(12),
   },
   socialButtonText: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
   },
 });

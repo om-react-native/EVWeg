@@ -4,6 +4,8 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Navigation, Heart, Zap, Star } from 'lucide-react-native';
 import { useTheme } from '@/theme/useTheme';
 import { ChargingStation } from '@/types/charging';
+import { scale, verticalScale, moderateScale } from '@/theme/metrics';
+import { scaledFontSize } from '@/theme/font';
 
 interface StationDetailsBottomSheetProps {
   station: ChargingStation | null;
@@ -320,153 +322,153 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: scale(20),
+    paddingBottom: verticalScale(20),
   },
   header: {
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
   stationInfo: {
     flex: 1,
   },
   stationName: {
-    fontSize: 20,
+    fontSize: scaledFontSize(20),
     fontWeight: '700',
-    marginBottom: 4,
+    marginBottom: verticalScale(4),
   },
   stationProvider: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '500',
   },
   favoriteButton: {
-    padding: 8,
+    padding: scale(8),
   },
   metaInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 12,
+    gap: scale(12),
+    marginBottom: verticalScale(12),
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: scale(4),
   },
   rating: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '600',
   },
   distance: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    gap: 6,
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(6),
+    borderRadius: moderateScale(16),
+    gap: scale(6),
   },
   statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: moderateScale(8),
+    height: verticalScale(8),
+    borderRadius: moderateScale(4),
   },
   statusText: {
-    fontSize: 13,
+    fontSize: scaledFontSize(13),
     fontWeight: '600',
   },
   section: {
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
-    marginBottom: 12,
+    marginBottom: verticalScale(12),
   },
   portsInfo: {
-    fontSize: 14,
-    marginBottom: 12,
+    fontSize: scaledFontSize(14),
+    marginBottom: verticalScale(12),
   },
   portsContainer: {
-    gap: 12,
+    gap: scale(12),
   },
   portCard: {
-    padding: 16,
-    borderRadius: 12,
+    padding: scale(16),
+    borderRadius: moderateScale(12),
     borderWidth: 2,
   },
   portHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: scale(8),
+    marginBottom: verticalScale(8),
   },
   portType: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
   },
   portPrice: {
-    fontSize: 14,
-    marginBottom: 4,
+    fontSize: scaledFontSize(14),
+    marginBottom: verticalScale(4),
   },
   portStatus: {
-    fontSize: 13,
+    fontSize: scaledFontSize(13),
     fontWeight: '500',
   },
   amenitiesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: scale(8),
   },
   amenityChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(6),
+    borderRadius: moderateScale(16),
     borderWidth: 1,
   },
   amenityText: {
-    fontSize: 13,
+    fontSize: scaledFontSize(13),
   },
   offerBanner: {
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 20,
+    padding: scale(12),
+    borderRadius: moderateScale(8),
+    marginBottom: verticalScale(20),
   },
   offerText: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '500',
   },
   hours: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
   },
   address: {
-    fontSize: 14,
-    marginBottom: 4,
+    fontSize: scaledFontSize(14),
+    marginBottom: verticalScale(4),
   },
   city: {
-    fontSize: 13,
+    fontSize: scaledFontSize(13),
   },
   actions: {
-    marginTop: 8,
+    marginTop: verticalScale(8),
   },
   navigateButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
+    paddingVertical: verticalScale(16),
+    borderRadius: moderateScale(12),
+    gap: scale(8),
   },
   navigateButtonText: {
-    fontSize: 16,
+    fontSize: scaledFontSize(16),
     fontWeight: '600',
   },
 });

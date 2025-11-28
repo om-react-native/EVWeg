@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Star, CheckCircle } from 'lucide-react-native';
 import { useTheme } from '@/theme/useTheme';
 import { ChargingStation } from '@/types/charging';
+import { scale, verticalScale, moderateScale } from '@/theme/metrics';
+import { scaledFontSize } from '@/theme/font';
 
 interface StationListCardProps {
   station: ChargingStation;
@@ -151,10 +153,10 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 280,
-    padding: 12,
-    borderRadius: 12,
-    marginRight: 12,
+    width: scale(280),
+    padding: scale(12),
+    borderRadius: moderateScale(12),
+    marginRight: scale(12),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -162,68 +164,68 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: moderateScale(48),
+    height: verticalScale(48),
+    borderRadius: moderateScale(24),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: scale(12),
   },
   iconText: {
-    fontSize: 20,
+    fontSize: scaledFontSize(20),
     fontWeight: '700',
   },
   info: {
     flex: 1,
   },
   stationName: {
-    fontSize: 14,
+    fontSize: scaledFontSize(14),
     fontWeight: '600',
     marginBottom: 2,
   },
   location: {
-    fontSize: 12,
+    fontSize: scaledFontSize(12),
     marginBottom: 2,
   },
   distance: {
-    fontSize: 11,
+    fontSize: scaledFontSize(11),
   },
   rightSection: {
     alignItems: 'flex-end',
-    gap: 4,
+    gap: scale(4),
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    gap: 4,
+    paddingHorizontal: scale(8),
+    paddingVertical: verticalScale(4),
+    borderRadius: moderateScale(12),
+    gap: scale(4),
   },
   statusText: {
-    fontSize: 11,
+    fontSize: scaledFontSize(11),
     fontWeight: '600',
   },
   unavailable: {
-    fontSize: 11,
+    fontSize: scaledFontSize(11),
     fontWeight: '500',
   },
   connectionBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingHorizontal: scale(8),
+    paddingVertical: verticalScale(4),
+    borderRadius: moderateScale(8),
   },
   connectionText: {
-    fontSize: 11,
+    fontSize: scaledFontSize(11),
     fontWeight: '600',
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: scale(4),
   },
   rating: {
-    fontSize: 12,
+    fontSize: scaledFontSize(12),
     fontWeight: '600',
   },
 });
