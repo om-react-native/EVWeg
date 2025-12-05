@@ -4,13 +4,17 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <!-- Use a solid status bar color so content is not visible behind it -->
+        <item name="android:statusBarColor">@color/bootsplash_background</item>
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <!-- Theme used by react-native-bootsplash for the launch Activity -->
     <style name="BootSplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/bootsplash</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <!-- Match the splash background instead of transparent -->
+        <item name="android:statusBarColor">@color/bootsplash_background</item>
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
 </resources>

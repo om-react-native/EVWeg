@@ -17,7 +17,7 @@ export const createStyles = (theme: any) =>
       left: 0,
       right: 0,
       paddingTop: verticalScale(60),
-      paddingHorizontal: scale(16),
+      // paddingHorizontal: scale(12),
       paddingBottom: verticalScale(16),
       backgroundColor: 'transparent',
       zIndex: 20,

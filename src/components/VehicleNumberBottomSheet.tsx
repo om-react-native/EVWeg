@@ -107,6 +107,7 @@ export const VehicleNumberBottomSheet: React.FC<
       transparent
       animationType="none"
       onRequestClose={handleBackdropPress}
+      statusBarTranslucent={true}
     >
       <KeyboardAvoidingView
         style={styles.modalWrapper}

@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: verticalScale(32),
-    paddingHorizontal: scale(20),
+    // paddingHorizontal: scale(20),
   },
   otpInput: {
     width: scale(48),
@@ -49,6 +49,7 @@ export const styles = StyleSheet.create({
     fontSize: scaledFontSize(24),
     fontWeight: '600',
     textAlign: 'center',
+    marginHorizontal: scale(2),
   },
   verifyButton: {
     width: '100%',
@@ -74,6 +75,11 @@ export const styles = StyleSheet.create({
   resendLink: {
     fontSize: scaledFontSize(14),
     fontWeight: '600',
+  },
+  inlineLoader: {
+    marginTop: verticalScale(16),
+    marginBottom: verticalScale(16),
+    alignItems: 'center',
   },
 });
 

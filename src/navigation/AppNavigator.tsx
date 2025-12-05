@@ -47,13 +47,6 @@ export const AppNavigator: React.FC = () => {
   }, []);
 
   // Hide native splash screen once we know which route to show
-  useEffect(() => {
-    if (initialRoute) {
-      RNBootSplash.hide({ fade: true }).catch(error => {
-        console.warn('Failed to hide bootsplash', error);
-      });
-    }
-  }, [initialRoute]);
 
   if (!initialRoute) {
     // Simple placeholder while we determine initial route
@@ -61,7 +54,13 @@ export const AppNavigator: React.FC = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      onReady={() => {
+        RNBootSplash.hide({ fade: true }).catch(error => {
+          console.warn('Failed to hide bootsplash', error);
+        });
+      }}
+    >
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{

@@ -1,30 +1,38 @@
 import React from 'react';
-import { StatusBar, Text, TextInput } from 'react-native';
+import { Platform, StatusBar, Text, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from '@/theme/ThemeContext';
 import { useThemeContext } from '@/theme/useTheme';
 import { AppNavigator } from '@/navigation/AppNavigator';
 
-// Ensure all text respects system font scaling by default
-if (!Text.defaultProps) {
-  Text.defaultProps = {};
+// Ensure all text respects system font scaling by default.
+// React Native's type definitions don't expose `defaultProps`, so we cast to `any`.
+const TextAny = Text as any;
+const TextInputAny = TextInput as any;
+
+if (!TextAny.defaultProps) {
+  TextAny.defaultProps = {};
 }
-if (!TextInput.defaultProps) {
-  TextInput.defaultProps = {};
+if (!TextInputAny.defaultProps) {
+  TextInputAny.defaultProps = {};
 }
-Text.defaultProps.allowFontScaling = true;
-TextInput.defaultProps.allowFontScaling = true;
+TextAny.defaultProps.allowFontScaling = true;
+TextInputAny.defaultProps.allowFontScaling = true;
 
 function AppContent() {
-  const { isDark } = useThemeContext();
+  const { isDark, theme } = useThemeContext();
 
   return (
     <>
       <StatusBar
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
+        backgroundColor={
+          Platform.OS === 'android'
+            ? theme.colors.backgrounds.primary
+            : 'transparent'
+        }
+        translucent={Platform.OS !== 'android'}
       />
       <AppNavigator />
     </>

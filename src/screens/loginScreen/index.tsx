@@ -87,7 +87,10 @@ export const LoginScreen: React.FC = () => {
         styles.container,
         { backgroundColor: theme.colors.backgrounds.primary },
       ]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      // On Android, using `behavior="height"` can cause the root view to shrink,
+      // revealing the native window background (green area) at the bottom
+      // when the keyboard opens. We only enable keyboard avoidance on iOS.
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContent}

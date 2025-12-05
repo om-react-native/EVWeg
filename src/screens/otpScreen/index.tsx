@@ -8,28 +8,17 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { useTheme } from '@/theme/useTheme';
 import { EVWegLogo } from '@/assets/svg';
+import { EVWegLoader } from '@/components/EVWegLoader';
 import { styles } from './styles';
 
 type OTPScreenRouteProp = RouteProp<RootStackParamList, 'OTP'>;
 type OTPScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OTP'>;
-
-// Placeholder functions for OTP verification
-const verifyOTP = async (phone: string, otp: string) => {
-  console.log('Verifying OTP:', phone, otp);
-  // TODO: Implement OTP verification API
-  return true;
-};
-
-const verifyEmailOTP = async (email: string, otp: string) => {
-  console.log('Verifying Email OTP:', email, otp);
-  // TODO: Implement email OTP verification API
-  return true;
-};
 
 const resendOTP = async (type: 'phone' | 'email', value: string) => {
   console.log('Resending OTP to:', type, value);
@@ -48,6 +37,7 @@ export const OTPScreen: React.FC = () => {
   const [resendTimer, setResendTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(TextInput | null)[]>([]);
+  const loaderTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     // Start resend timer
@@ -61,7 +51,12 @@ export const OTPScreen: React.FC = () => {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      if (loaderTimeoutRef.current) {
+        clearTimeout(loaderTimeoutRef.current);
+      }
+    };
   }, []);
 
   const formatPhoneNumber = (phone: string) => {
@@ -116,25 +111,16 @@ export const OTPScreen: React.FC = () => {
     }
 
     setIsLoading(true);
-    try {
-      let success = false;
-      if (type === 'phone') {
-        success = await verifyOTP(value, otpString);
-        if (success) {
-          navigation.replace('CompleteProfile');
-        }
-      } else {
-        success = await verifyEmailOTP(value, otpString);
-        if (success) {
-          // Navigate to vehicle selection screen
-          navigation.replace('VehicleSelection');
-        }
-      }
-    } catch (error) {
-      console.error('OTP verification failed:', error);
-    } finally {
-      setIsLoading(false);
+    const targetRoute =
+      type === 'phone' ? 'CompleteProfile' : 'VehicleSelection';
+
+    // Show loader for 60 seconds, then navigate
+    if (loaderTimeoutRef.current) {
+      clearTimeout(loaderTimeoutRef.current);
     }
+    loaderTimeoutRef.current = setTimeout(() => {
+      navigation.replace(targetRoute);
+    }, 1000);
   };
 
   const handleResend = async () => {
@@ -159,115 +145,124 @@ export const OTPScreen: React.FC = () => {
       : `Enter the 6-digit code sent to ${value}`;
 
   return (
-    <KeyboardAvoidingView
+    <SafeAreaView
       style={[
         styles.container,
         { backgroundColor: theme.colors.backgrounds.primary },
       ]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.logoContainer}>
-          <EVWegLogo width={280} height={84} variant="light" />
-        </View>
-
-        <View style={styles.contentContainer}>
-          <Text style={[styles.title, { color: theme.colors.text.primary }]}>
-            Enter Verification Code
-          </Text>
-          <Text
-            style={[styles.description, { color: theme.colors.text.secondary }]}
-          >
-            {description}
-          </Text>
-
-          <View style={styles.otpContainer}>
-            {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={ref => {
-                  inputRefs.current[index] = ref;
-                }}
-                style={[
-                  styles.otpInput,
-                  {
-                    backgroundColor: theme.colors.backgrounds.card,
-                    borderColor: digit
-                      ? theme.colors.buttons.primary.background
-                      : theme.colors.borders.light,
-                    color: theme.colors.text.primary,
-                  },
-                ]}
-                value={digit}
-                onChangeText={text => handleOtpChange(index, text)}
-                onKeyPress={({ nativeEvent }) =>
-                  handleKeyPress(index, nativeEvent.key)
-                }
-                keyboardType="number-pad"
-                maxLength={1}
-                selectTextOnFocus
-                autoFocus={index === 0}
-              />
-            ))}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.logoContainer}>
+            <EVWegLogo width={280} height={84} variant="light" />
           </View>
 
-          <TouchableOpacity
-            style={[
-              styles.verifyButton,
-              {
-                backgroundColor:
-                  otp.join('').length === 6
-                    ? theme.colors.buttons.primary.background
-                    : theme.colors.borders.light,
-              },
-            ]}
-            onPress={handleVerify}
-            disabled={otp.join('').length !== 6 || isLoading}
-          >
-            <Text
-              style={[
-                styles.verifyButtonText,
-                {
-                  color:
-                    otp.join('').length === 6
-                      ? theme.colors.buttons.primary.text
-                      : theme.colors.text.tertiary,
-                },
-              ]}
-            >
-              {isLoading ? 'Verifying...' : 'Verify'}
+          <View style={styles.contentContainer}>
+            <Text style={[styles.title, { color: theme.colors.text.primary }]}>
+              Enter Verification Code
             </Text>
-          </TouchableOpacity>
-
-          <View style={styles.resendContainer}>
             <Text
               style={[
-                styles.resendText,
+                styles.description,
                 { color: theme.colors.text.secondary },
               ]}
             >
-              Didn't receive the code?{' '}
+              {description}
             </Text>
-            <TouchableOpacity onPress={handleResend} disabled={!canResend}>
+
+            <View style={styles.otpContainer}>
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={ref => {
+                    inputRefs.current[index] = ref;
+                  }}
+                  style={[
+                    styles.otpInput,
+                    {
+                      backgroundColor: theme.colors.backgrounds.card,
+                      borderColor: digit
+                        ? theme.colors.buttons.primary.background
+                        : theme.colors.borders.light,
+                      color: theme.colors.text.primary,
+                    },
+                  ]}
+                  value={digit}
+                  onChangeText={text => handleOtpChange(index, text)}
+                  onKeyPress={({ nativeEvent }) =>
+                    handleKeyPress(index, nativeEvent.key)
+                  }
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  selectTextOnFocus
+                  autoFocus={index === 0}
+                />
+              ))}
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.verifyButton,
+                {
+                  backgroundColor:
+                    otp.join('').length === 6
+                      ? theme.colors.buttons.primary.background
+                      : theme.colors.borders.light,
+                },
+              ]}
+              onPress={handleVerify}
+              disabled={otp.join('').length !== 6 || isLoading}
+            >
               <Text
                 style={[
-                  styles.resendLink,
+                  styles.verifyButtonText,
                   {
-                    color: canResend
-                      ? theme.colors.text.link
-                      : theme.colors.text.tertiary,
+                    color:
+                      otp.join('').length === 6
+                        ? theme.colors.buttons.primary.text
+                        : theme.colors.text.tertiary,
                   },
                 ]}
               >
-                {canResend ? 'Resend' : `Resend in ${resendTimer}s`}
+                {isLoading ? 'Verifying...' : 'Verify'}
               </Text>
             </TouchableOpacity>
+
+            <View style={styles.resendContainer}>
+              <Text
+                style={[
+                  styles.resendText,
+                  { color: theme.colors.text.secondary },
+                ]}
+              >
+                Didn't receive the code?{' '}
+              </Text>
+              <TouchableOpacity onPress={handleResend} disabled={!canResend}>
+                <Text
+                  style={[
+                    styles.resendLink,
+                    {
+                      color: canResend
+                        ? theme.colors.text.link
+                        : theme.colors.text.tertiary,
+                    },
+                  ]}
+                >
+                  {canResend ? 'Resend' : `Resend in ${resendTimer}s`}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      <EVWegLoader visible={isLoading} text="Verifying..." />
+    </SafeAreaView>
   );
 };
