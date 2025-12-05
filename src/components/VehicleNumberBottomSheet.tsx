@@ -111,7 +111,8 @@ export const VehicleNumberBottomSheet: React.FC<
     >
       <KeyboardAvoidingView
         style={styles.modalWrapper}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Ensure the bottom sheet stays above the keyboard on both platforms
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <Pressable onPress={onSkip} style={styles.skipButton}>
           <Text style={[styles.skipText, { color: theme.colors.text.primary }]}>

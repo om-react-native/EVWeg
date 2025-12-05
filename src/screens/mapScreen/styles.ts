@@ -41,7 +41,7 @@ export const createStyles = (theme: any) =>
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      backgroundColor: 'rgba(255, 255, 255, 0.30)',
       paddingHorizontal: scale(16),
       paddingVertical: verticalScale(10),
       borderRadius: moderateScale(8),
@@ -57,7 +57,7 @@ export const createStyles = (theme: any) =>
     },
     vehicleNumber: {
       fontSize: scaledFontSize(12),
-      color: 'rgba(255, 255, 255, 0.7)',
+      color: 'rgba(255, 255, 255, 1)',
     },
     milesButton: {
       backgroundColor: '#F59E0B',

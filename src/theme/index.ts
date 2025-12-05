@@ -222,7 +222,7 @@ export const darkTheme = {
     backgrounds: {
       primary: '#090B0C',
       secondary: '#121517',
-      card: '#1A2023',
+      card: '#2C3539',
       dark: '#2C3539',
       light: '#22272D',
     },

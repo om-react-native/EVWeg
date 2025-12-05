@@ -167,10 +167,10 @@ export const MapScreen: React.FC = () => {
           {/* Gradient Background Effect */}
           <LinearGradient
             colors={[
-              theme.colors.secondary[900],
-              theme.colors.secondary[800],
-              theme.colors.secondary[700] + 'CC',
-              theme.colors.secondary[700] + '80',
+              theme.colors.primary[900],
+              theme.colors.primary[700],
+              theme.colors.primary[500] + 'E6',
+              theme.colors.primary[500] + '80',
               'transparent',
             ]}
             start={{ x: 0, y: 0 }}

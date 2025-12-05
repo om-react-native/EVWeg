@@ -62,7 +62,7 @@ export const AppNavigator: React.FC = () => {
       }}
     >
       <Stack.Navigator
-        initialRouteName={initialRoute}
+        initialRouteName={'MainTabs'}
         screenOptions={{
           headerShown: false,
           cardStyle: { backgroundColor: 'transparent' },
